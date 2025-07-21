@@ -17,8 +17,8 @@ const PendingClubsTable = () => {
   };
   return (
     <div>
-       <div className="bg-white rounded shadow-md p-4">
-      <h3 className="text-xl font-semibold mb-4">Pending Club Requests</h3>
+       <div className=" rounded shadow-md p-4">
+      {/* <h3 className="text-xl font-semibold mb-4">Pending Club Requests</h3> */}
       <table className="min-w-full text-left border border-gray-200 rounded-xl shadow-sm bg-white">
         <thead className='bg-purple-100 text-custom-purple'>
           <tr >
