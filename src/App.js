@@ -7,22 +7,28 @@ import Members from "./pages/Members";
 import DashboardLayout from './layouts/DashboardLayout';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import AuthProvider from './context/AuthProvider';
+import ProtectedRoute from './auth/ProtectedRoute';
 
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/register' element={<Register/>}/>
-        <Route path="/" element={<DashboardLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="clubs" element={<Clubs />} />
-          <Route path="events" element={<Events />} />
-          <Route path="members" element={<Members />} />
-        </Route>
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route element={<ProtectedRoute/>}>
+            <Route path="/" element={<DashboardLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="clubs" element={<Clubs />} />
+              <Route path="events" element={<Events />} />
+              <Route path="members" element={<Members />} />
+            </Route>
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

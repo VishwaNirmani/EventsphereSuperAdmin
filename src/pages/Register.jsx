@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-// import { register } from "../services/AuthService";
+import { register } from "../services/AuthService";
 
 
 const Register = () => {
@@ -12,7 +12,8 @@ const Register = () => {
   const [keycode, setKeycode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const handlebtnSignup = async (e) => {
     
@@ -24,19 +25,20 @@ const Register = () => {
     
     setIsLoading(true);
 
-    // const res = await register(
-    //   firstName,
-    //   lastName,
-    //   email,
-    //   password,
-    // );
-    // setIsLoading(false);
+    const res = await register(
+      firstName,
+      lastName,
+      email,
+      password,
+      keycode
+    );
+    setIsLoading(false);
 
-    // if (res.success) {
-    //   setIsOpen(true);
-    // } else {
-    //   setErrorMessage(res.message);
-    // }
+    if (res.success) {
+      navigate("/login");
+    } else {
+      setErrorMessage(res.message);
+    }
 
   };
 

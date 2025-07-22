@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate} from "react-router-dom";
 import { useState } from "react";
-// import useAuth from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
 
@@ -12,19 +12,19 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState("");
 
     const navigate = useNavigate();
-    // const { loginUser } = useAuth();
+    const { loginUser } = useAuth();
 
     const handleBtnClick = async (e) => {
         e.preventDefault();
         setIsLoading(true);
 
-        // const res = await loginUser(email, password);
-        // setIsLoading(false);
-        // if (res.success) {
-        //     navigate("/");
-        // } else {
-        //     setErrorMessage(res.message);
-        // }
+        const res = await loginUser(email, password);
+        setIsLoading(false);
+        if (res.success) {
+            navigate("/");
+        } else {
+            setErrorMessage(res.message);
+        }
 
     }
 
