@@ -1,10 +1,8 @@
-import { Link, useLocation, useNavigate} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 
 const Login = () => {
-
-    const location = useLocation();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

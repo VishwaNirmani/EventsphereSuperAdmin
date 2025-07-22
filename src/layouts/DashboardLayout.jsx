@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 
 
 const DashboardLayout = () => {
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
   return (
-    <div className="grid grid-cols-[260px_1fr] grid-rows-[auto_1fr] grid-areas-layout h-screen ">
-      <aside className="row-span-2">
-        <Sidebar/>
-      </aside>
-      <header className=''>
-        <Header/>
-      </header>
-        
-      
-      <main className="bg-gray-50  ">
-        <Outlet />
-      </main>
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <div className="flex-1 flex flex-col">
+        <Header toggleSidebar={toggleSidebar} />
+        <main className="flex-1 overflow-y-auto bg-gray-50 p-4">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

@@ -13,7 +13,7 @@ const Clubs = () => {
       : "text-gray-700 hover:text-custom-purple"
     }`;
   return (
-    <div className="flex-1 bg-gray-50 h-screen py-20 px-8">
+    <div className="flex-1 bg-gray-50 h-screen px-8">
       <h2 className="text-2xl font-bold mt-4 ">Clubs </h2>
 
       {/* Club Stats */}

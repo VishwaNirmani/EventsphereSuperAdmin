@@ -1,35 +1,31 @@
-import React from 'react'
-import { HiOutlineBell } from "react-icons/hi2";
 import { Menu } from "lucide-react";
 
-const Header = ({ toggleSidebar }) => {
+const Header = ({ toggleSidebar, user }) => {
   return (
-    <div className='fixed top-0 left-64 right-0 h-16 bg-white border-b flex items-center px-6 shadow-sm justify-between z-50'>
+    <div className="h-16 bg-white border-b flex items-center px-6 shadow-sm justify-between z-10">
 
-
-    {/* toggle button */}
-     <button onClick={toggleSidebar} className="">
-        <Menu className="w-6 h-6" />
-      </button>
-      <div className='text-base md:text-lg font-semibold text-gray-700 p-5 '>
-          EventSphere
+      {/* Center: Optional search bar */}
+      <div className="flex-1 mx-6 hidden md:block">
+        <input 
+          type="text" 
+          placeholder="Search..." 
+          className="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
+        />
       </div>
 
-      <div className='flex items-center space-x-4'>
-
-        <input type="text" placeholder="Search..." className='hidden md:block px-3 py-1.5 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300' />
-
-        <button className="relative text-gray-600 hover:text-black">
-          <HiOutlineBell className="w-5 h-5" />
-          
-        </button>
-
-
+      {/* Right: User info */}
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-gray-700">{user?.name || "User"}</span>
+          <img 
+            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "U")}&background=0D8ABC&color=fff`}
+            alt="Avatar"
+            className="w-8 h-8 rounded-full"
+          />
+        </div>
       </div>
-
-    
-      
     </div>
-  )
-}
+  );
+};
+
 export default Header;

@@ -13,7 +13,7 @@ const Members = () => {
   return (
     <div className='flex-1 bg-gray-50 h-screen'>
 
-      <div className='py-20  px-8'>
+      <div className='px-8'>
         <h2 className="text-2xl font-bold mt-4">Members</h2>
 
          {/* Members stat cards */}
