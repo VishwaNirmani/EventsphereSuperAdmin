@@ -1,47 +1,59 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, Ban, CheckCircle2, XCircle, Unlock } from "lucide-react";
+import { changeStatus, getActiveClubs, getBlockedClubs, getPendingApprovalClubs } from "../services/ClubService";
+import toast from "react-hot-toast";
 
 export default function ClubList({ status = "active" }) {
 
   const [search, setSearch] = useState("");
   const [input, setInput] = useState("");
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(2);
-  const [clubs, setClubs] = useState([
-    {
-      id: 1,
-      name: "Art & Design Club",
-      logoUrl: "https://via.placeholder.com/60x60?text=Logo1",
-      header: "Empowering youth through creativity",
-    },
-    {
-      id: 2,
-      name: "Coding Geeks",
-      logoUrl: "https://via.placeholder.com/60x60?text=Logo2",
-      header: "We code. We build. We learn.",
-    },
-    {
-      id: 3,
-      name: "Music Lovers",
-      logoUrl: "https://via.placeholder.com/60x60?text=Logo3",
-      header: "Bringing harmony to campus life",
-    },
-  ]);
-
-  const filteredClubs = clubs.filter((club) =>
-    club.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const totalPages = Math.ceil(filteredClubs.length / itemsPerPage);
-  const paginatedClubs = filteredClubs.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+  const [page, setPage] = useState(0);
+  const [clubs, setClubs] = useState([]);
 
   const handleSearch = () => {
     setSearch(input);
     setPage(1);
   };
+
+  useEffect(() => {
+
+    switch (status) {
+      case "active":
+        const req = getActiveClubs(page);
+        req.then(response => {
+          if (response.success) {
+            setClubs(response.data);
+          }
+        });
+        break;
+      case "pending":
+        const reqq = getPendingApprovalClubs(page);
+        reqq.then(response => {
+          if (response.success) {
+            setClubs(response.data);
+          }
+        });
+        break;
+      case "blocked":
+        const reqqq = getBlockedClubs(page);
+        reqqq.then(response => {
+          if (response.success) {
+            setClubs(response.data);
+          }
+        });
+        break;
+    }
+
+  }, []);
+
+  const handleStatusChange = async (status, clubId) => {
+    const res = await changeStatus(clubId, status);
+    if(res.success){
+      toast.success("Successfully changed!");
+    }else{
+      toast.error("Could not change to "+status);
+    }
+  }
 
   const renderButtons = (clubId) => {
     const commonButton = (
@@ -60,7 +72,7 @@ export default function ClubList({ status = "active" }) {
             {commonButton}
             <button
               className="flex items-center gap-1 text-sm px-3 py-1 border border-red-600 text-red-600 rounded hover:bg-red-50 transition"
-              onClick={() => console.log("Block", clubId)}
+              onClick={() => handleStatusChange("BLOCKED", clubId)}
             >
               <Ban size={16} /> Block
             </button>
@@ -72,13 +84,13 @@ export default function ClubList({ status = "active" }) {
             {commonButton}
             <button
               className="flex items-center gap-1 text-sm px-3 py-1 border border-green-600 text-green-600 rounded hover:bg-green-50 transition"
-              onClick={() => console.log("Approve", clubId)}
+              onClick={() => handleStatusChange("ACTIVE", clubId)}
             >
               <CheckCircle2 size={16} /> Approve
             </button>
             <button
               className="flex items-center gap-1 text-sm px-3 py-1 border border-yellow-600 text-yellow-600 rounded hover:bg-yellow-50 transition"
-              onClick={() => console.log("Reject", clubId)}
+              onClick={() => handleStatusChange("BLOCKED", clubId)}
             >
               <XCircle size={16} /> Reject
             </button>
@@ -90,7 +102,7 @@ export default function ClubList({ status = "active" }) {
             {commonButton}
             <button
               className="flex items-center gap-1 text-sm px-3 py-1 border border-green-600 text-green-600 rounded hover:bg-green-50 transition"
-              onClick={() => console.log("Activate", clubId)}
+              onClick={() => handleStatusChange("ACTIVE", clubId)}
             >
               <Unlock size={16} /> Activate
             </button>
@@ -115,7 +127,7 @@ export default function ClubList({ status = "active" }) {
         />
         <button
           onClick={handleSearch}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+          className="px-6 py-2 bg-custom-purple text-white rounded-md hover:bg-custom-purple-lock transition"
         >
           Search
         </button>
@@ -123,20 +135,20 @@ export default function ClubList({ status = "active" }) {
 
       {/* Club Cards */}
       <div className="space-y-6">
-        {paginatedClubs.map((club) => (
+        {clubs.map((club) => (
           <div
             key={club.id}
             className="bg-white border rounded-xl shadow-sm p-5 flex flex-col md:flex-row justify-between items-start md:items-center"
           >
             <div className="flex items-start gap-4 flex-col md:flex-row md:items-center">
               <img
-                src={club.logoUrl}
+                src={club.logo}
                 alt={`${club.name} Logo`}
                 className="w-14 h-14 rounded-full border"
               />
               <div>
                 <h2 className="text-xl font-semibold">{club.name}</h2>
-                <p className="text-sm text-gray-600 mt-1">{club.header}</p>
+                <p className="text-sm text-gray-600 mt-1">{club.heading}</p>
               </div>
             </div>
 
@@ -148,22 +160,31 @@ export default function ClubList({ status = "active" }) {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-8 space-x-2">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setPage(index + 1)}
-              className={`w-9 h-9 border rounded-full text-sm ${page === index + 1
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-700 hover:bg-gray-100"
-                }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="flex justify-center mt-8 space-x-4">
+        {/* Previous Button */}
+        <button
+          onClick={() => setPage(page - 1)}
+          disabled={page === 1}
+          className={`w-24 h-9 border rounded-full text-sm flex items-center justify-center 
+        ${page === 0
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "text-gray-700 hover:bg-gray-100"}`}
+        >
+          ← Previous
+        </button>
+
+        {/* Next Button */}
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={clubs.length < 10}
+          className={`w-24 h-9 border rounded-full text-sm flex items-center justify-center 
+        ${clubs.length < 10
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "text-gray-700 hover:bg-gray-100"}`}
+        >
+          Next →
+        </button>
+      </div>
     </div>
   );
 }

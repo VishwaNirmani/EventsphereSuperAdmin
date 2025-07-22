@@ -33,7 +33,7 @@ const Clubs = () => {
           Pending Clubs
         </button>
         <button className={tabClasses("blocked")} onClick={() => setActiveTab("blocked")}>
-          Bloked Clubs
+          Blocked Clubs
         </button>
       </div>
 

@@ -9,26 +9,48 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AuthProvider from './context/AuthProvider';
 import ProtectedRoute from './auth/ProtectedRoute';
+import { Toaster } from 'react-hot-toast';
 
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route element={<ProtectedRoute/>}>
-            <Route path="/" element={<DashboardLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="clubs" element={<Clubs />} />
-              <Route path="events" element={<Events />} />
-              <Route path="members" element={<Members />} />
+    <>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<DashboardLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="clubs" element={<Clubs />} />
+                <Route path="events" element={<Events />} />
+                <Route path="members" element={<Members />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
-      </Router>
-    </AuthProvider>
+          </Routes>
+        </Router>
+      </AuthProvider>
+
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 4000,
+          success: {
+            style: {
+              background: '#d1fae5',
+              color: '#065f46',
+            },
+          },
+          error: {
+            style: {
+              background: '#fee2e2',
+              color: '#991b1b',
+            },
+          },
+        }}
+      />
+    </>
   );
 }
 

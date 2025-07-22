@@ -1,9 +1,43 @@
 import axiosInstance from "../utils/RequestHelper";
 
-export const getClubs = async (isOwnclubs) => {
+export const getActiveClubs = async (page) => {
     try{
 
-        const res = await axiosInstance.get( isOwnclubs ? "/api/club/owned-clubs" : "/api/club/enrolled-clubs");
+        const res = await axiosInstance.get(`/api/club/active-clubs?size=10&page=${page}`);
+        
+        return {
+            success: true,
+            data: res.data
+        };
+    }catch(err){
+        return {
+            success: false,
+            message: "Failed to retrieve data"
+        }
+    }
+}
+
+export const getPendingApprovalClubs = async (page) => {
+    try{
+
+        const res = await axiosInstance.get(`/api/club/pending-request?size=10&page=${page}`);
+        
+        return {
+            success: true,
+            data: res.data
+        };
+    }catch(err){
+        return {
+            success: false,
+            message: "Failed to retrieve data"
+        }
+    }
+}
+
+export const getBlockedClubs = async (page) => {
+    try{
+
+        const res = await axiosInstance.get(`/api/club/blocked?size=10&page=${page}`);
         
         return {
             success: true,
@@ -45,5 +79,22 @@ export const createClub = async (formData) => {
             success: false,
             message: "An unexpected error occurred"
         };
+    }
+}
+
+export const changeStatus = async (clubId, status) => {
+    try{
+
+        const res = await axiosInstance.get(`/api/club/change-status?clubId=${clubId}&status=${status}`);
+        
+        return {
+            success: true,
+            data: res.data
+        };
+    }catch(err){
+        return {
+            success: false,
+            message: "Failed to retrieve data"
+        }
     }
 }
