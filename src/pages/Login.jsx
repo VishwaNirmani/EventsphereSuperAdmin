@@ -43,12 +43,12 @@ const Login = () => {
 
                 <form className="space-y-5">
                     <div>
-                        <label htmlFor="email" className="block mb-1 text-gray-600">Email</label>
+                        <label htmlFor="email" className="block mb-1 text-gray-600">Username</label>
                         <input
                             type="email"
                             id="email"
                             className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-purple"
-                            placeholder="you@example.com"
+                            placeholder="your_username"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />

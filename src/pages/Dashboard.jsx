@@ -28,15 +28,6 @@ const Dashboard = () => {
           <OverviewStat title="Total Clubs" value={50} />
           <OverviewStat title="Total Requests" value={50} />
         </div>
-
-
-        {/* club list table */}
-        <ClubListTable />
-
-        {/* Event list table */}
-        <div className='py-10'>
-          <EventTable/>
-        </div>
         
       </div>
 

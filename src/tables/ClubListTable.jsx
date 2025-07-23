@@ -50,6 +50,7 @@ export default function ClubList({ status = "active" }) {
     const res = await changeStatus(clubId, status);
     if(res.success){
       toast.success("Successfully changed!");
+      window.location.reload();
     }else{
       toast.error("Could not change to "+status);
     }
@@ -147,8 +148,8 @@ export default function ClubList({ status = "active" }) {
                 className="w-14 h-14 rounded-full border"
               />
               <div>
-                <h2 className="text-xl font-semibold">{club.name}</h2>
-                <p className="text-sm text-gray-600 mt-1">{club.heading}</p>
+                <h2 className="text-xl font-semibold text-left">{club.name}</h2>
+                <p className="text-sm text-gray-600 mt-1 text-left">{club.heading}</p>
               </div>
             </div>
 
