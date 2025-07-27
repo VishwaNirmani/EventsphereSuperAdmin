@@ -15,8 +15,7 @@ export default function ClubList({ status = "active" }) {
     setPage(1);
   };
 
-  useEffect(() => {
-
+  const getClubs = () => {
     switch (status) {
       case "active":
         const req = getActiveClubs(page);
@@ -43,6 +42,11 @@ export default function ClubList({ status = "active" }) {
         });
         break;
     }
+  }
+
+  useEffect(() => {
+
+    getClubs();
 
   }, []);
 
@@ -164,7 +168,10 @@ export default function ClubList({ status = "active" }) {
       <div className="flex justify-center mt-8 space-x-4">
         {/* Previous Button */}
         <button
-          onClick={() => setPage(page - 1)}
+          onClick={() => {
+             setPage(page - 1);
+             getClubs();
+          }}
           disabled={page === 1}
           className={`w-24 h-9 border rounded-full text-sm flex items-center justify-center 
         ${page === 0
@@ -176,10 +183,13 @@ export default function ClubList({ status = "active" }) {
 
         {/* Next Button */}
         <button
-          onClick={() => setPage(page + 1)}
-          disabled={clubs.length < 10}
+          onClick={() => {
+            setPage(page + 1)
+            getClubs();
+          }}
+          disabled={clubs.length < 5}
           className={`w-24 h-9 border rounded-full text-sm flex items-center justify-center 
-        ${clubs.length < 10
+        ${clubs.length < 5
               ? "bg-gray-200 text-gray-500 cursor-not-allowed"
               : "text-gray-700 hover:bg-gray-100"}`}
         >

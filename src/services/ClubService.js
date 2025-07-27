@@ -3,7 +3,7 @@ import axiosInstance from "../utils/RequestHelper";
 export const getActiveClubs = async (page) => {
     try{
 
-        const res = await axiosInstance.get(`/api/club/active-clubs?size=10&page=${page}`);
+        const res = await axiosInstance.get(`/api/club/active-clubs?size=5&page=${page}`);
         
         return {
             success: true,
@@ -20,7 +20,7 @@ export const getActiveClubs = async (page) => {
 export const getPendingApprovalClubs = async (page) => {
     try{
 
-        const res = await axiosInstance.get(`/api/club/pending-request?size=10&page=${page}`);
+        const res = await axiosInstance.get(`/api/club/pending-request?size=5&page=${page}`);
         
         return {
             success: true,
@@ -37,7 +37,7 @@ export const getPendingApprovalClubs = async (page) => {
 export const getBlockedClubs = async (page) => {
     try{
 
-        const res = await axiosInstance.get(`/api/club/blocked?size=10&page=${page}`);
+        const res = await axiosInstance.get(`/api/club/blocked?size=5&page=${page}`);
         
         return {
             success: true,
