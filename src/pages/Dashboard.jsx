@@ -43,7 +43,7 @@ const Dashboard = () => {
   return (
     <div className="flex-1 bg-gray-50 min-h-screen px-8 py-6">
       
-      <h2 className="text-2xl font-bold mb-4"><Over></Over></h2>
+      <h2 className="text-2xl font-bold mb-4">Overview</h2>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pb-6">
