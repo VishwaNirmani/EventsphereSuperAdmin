@@ -1,18 +1,30 @@
 import { useEffect, useState } from "react";
 import { Eye, Ban, CheckCircle2, XCircle, Unlock } from "lucide-react";
-import { changeStatus, getActiveClubs, getBlockedClubs, getPendingApprovalClubs } from "../services/ClubService";
+import { changeStatus, filterClubs, getActiveClubs, getBlockedClubs, getPendingApprovalClubs } from "../services/ClubService";
 import toast from "react-hot-toast";
+import Popup from "reactjs-popup";
+import ClubStatsPopup from "../components/club/ClubStatPopup";
 
 export default function ClubList({ status = "active" }) {
 
-  const [search, setSearch] = useState("");
   const [input, setInput] = useState("");
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [clubs, setClubs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [openView, setOpenView] = useState(false);
+  const [selectedClubId, setSelectedClubId] = useState(null);
+  const [clubName, setClubName] = useState("");
 
   const handleSearch = () => {
-    setSearch(input);
-    setPage(1);
+    setIsLoading(true);
+    const statusSearch = status === "active" ? "active" : status === "pending" ? "pending_approval" : "blocked"
+    filterClubs(statusSearch, input, page).then(res => {
+      setIsLoading(false);
+      if (res.success) {
+        setClubs(res.data);
+      }
+    });
+
   };
 
   const getClubs = () => {
@@ -48,15 +60,15 @@ export default function ClubList({ status = "active" }) {
 
     getClubs();
 
-  }, []);
+  }, [page]);
 
   const handleStatusChange = async (status, clubId) => {
     const res = await changeStatus(clubId, status);
-    if(res.success){
+    if (res.success) {
       toast.success("Successfully changed!");
       window.location.reload();
-    }else{
-      toast.error("Could not change to "+status);
+    } else {
+      toast.error("Could not change to " + status);
     }
   }
 
@@ -64,7 +76,11 @@ export default function ClubList({ status = "active" }) {
     const commonButton = (
       <button
         className="flex items-center gap-1 text-sm px-3 py-1 border border-blue-600 text-blue-600 rounded hover:bg-blue-50 transition"
-        onClick={() => console.log("View", clubId)}
+        onClick={() => {
+          setSelectedClubId(clubId);
+          setClubName(clubs.find(c=> c.id === clubId).name);
+          setOpenView(true);
+        }}
       >
         <Eye size={16} /> View
       </button>
@@ -132,9 +148,10 @@ export default function ClubList({ status = "active" }) {
         />
         <button
           onClick={handleSearch}
-          className="px-6 py-2 bg-custom-purple text-white rounded-md hover:bg-custom-purple-lock transition"
+          disabled={isLoading}
+          className={`px-6 py-2 ${isLoading ? "bg-custom-purple-lock" : "bg-custom-purple"} text-white rounded-md hover:bg-custom-purple-lock transition`}
         >
-          Search
+          {isLoading ? "Searching..." : "Search"}
         </button>
       </div>
 
@@ -169,12 +186,11 @@ export default function ClubList({ status = "active" }) {
         {/* Previous Button */}
         <button
           onClick={() => {
-             setPage(page - 1);
-             getClubs();
+            setPage(page - 1);
           }}
           disabled={page === 1}
           className={`w-24 h-9 border rounded-full text-sm flex items-center justify-center 
-        ${page === 0
+        ${page === 1
               ? "bg-gray-200 text-gray-500 cursor-not-allowed"
               : "text-gray-700 hover:bg-gray-100"}`}
         >
@@ -184,8 +200,7 @@ export default function ClubList({ status = "active" }) {
         {/* Next Button */}
         <button
           onClick={() => {
-            setPage(page + 1)
-            getClubs();
+            setPage(page + 1);
           }}
           disabled={clubs.length < 5}
           className={`w-24 h-9 border rounded-full text-sm flex items-center justify-center 
@@ -196,6 +211,33 @@ export default function ClubList({ status = "active" }) {
           Next →
         </button>
       </div>
+      <Popup
+        open={openView}
+        modal
+        closeOnDocumentClick={false}
+        overlayStyle={{
+          background: "rgba(0,0,0,0.4)",
+          zIndex: 1000,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "1.5rem",
+        }}
+        contentStyle={{
+          border: "none",
+          boxShadow: "none",
+          background: "transparent",
+          width: "100%",
+          maxWidth: "600px",
+          maxHeight: "90vh",
+          overflowY: "auto",
+          borderRadius: "0.5rem",
+          padding: "0",
+          boxSizing: "border-box",
+        }}
+      >
+        <ClubStatsPopup onClose={() => setOpenView(false)} clubId={selectedClubId} clubName={clubName}/>
+      </Popup>
     </div>
   );
 }

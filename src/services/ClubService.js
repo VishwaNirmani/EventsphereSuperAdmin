@@ -51,6 +51,23 @@ export const getBlockedClubs = async (page) => {
     }
 }
 
+export const filterClubs = async (status, name, page) => {
+    try{
+
+        const res = await axiosInstance.get(`/api/club/filter-clubs?size=5&page=${page}&name=${name}&status=${status}`);
+        
+        return {
+            success: true,
+            data: res.data
+        };
+    }catch(err){
+        return {
+            success: false,
+            message: "Failed to retrieve data"
+        }
+    }
+}
+
 export const createClub = async (formData) => {
     try{
         
@@ -86,6 +103,23 @@ export const changeStatus = async (clubId, status) => {
     try{
 
         const res = await axiosInstance.get(`/api/club/change-status?clubId=${clubId}&status=${status}`);
+        
+        return {
+            success: true,
+            data: res.data
+        };
+    }catch(err){
+        return {
+            success: false,
+            message: "Failed to retrieve data"
+        }
+    }
+}
+
+export const getClubStat = async (clubId) => {
+    try{
+
+        const res = await axiosInstance.get(`/api/club/club-statistics?clubId=${clubId}`);
         
         return {
             success: true,
