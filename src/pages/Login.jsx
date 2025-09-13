@@ -84,10 +84,6 @@ const Login = () => {
                         }
                     </button>
                 </form>
-                <div className="flex mt-2 text-sm text-custom-purple w-full justify-between">
-                    <span className="text-sm text-red-700">{errorMessage}</span>
-                    <Link className="">Forgot Password?</Link>
-                </div>
 
                 <p className="mt-4 text-sm text-gray-500">
                     Don’t have an account? <Link to="/register" className="text-custom-purple hover:underline">Sign Up</Link>

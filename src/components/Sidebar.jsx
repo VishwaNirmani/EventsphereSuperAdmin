@@ -2,17 +2,12 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   MdOutlineSpaceDashboard,
-  MdOutlineEventAvailable,
 } from "react-icons/md";
-import {
-  HiOutlineUsers
-} from "react-icons/hi2";
 import {
   IoHomeOutline,
   IoLogOutOutline
 } from "react-icons/io5";
 import {
-  FiSettings,
   FiChevronLeft,
   FiChevronRight
 } from "react-icons/fi";
@@ -83,18 +78,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               to="/clubs"
               icon={<IoHomeOutline size={18} />}
               label="Clubs"
-              collapsed={collapsed}
-            />
-            <NavItem
-              to="/events"
-              icon={<MdOutlineEventAvailable size={18} />}
-              label="Events"
-              collapsed={collapsed}
-            />
-            <NavItem
-              to="/members"
-              icon={<HiOutlineUsers size={18} />}
-              label="Members"
               collapsed={collapsed}
             />
           </ul>

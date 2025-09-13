@@ -132,3 +132,128 @@ export const getClubStat = async (clubId) => {
         }
     }
 }
+
+export const rejectMember = async (userId) => {
+
+    try{
+        const res = await axiosInstance.post("api/club/reject-member?userId="+userId);
+        if(res.status == 200){
+            return {
+                success: true,
+                data: res.data
+            }
+        }
+        
+        return {
+            success: false,
+            message: "Failed to get members"
+        }
+    }catch(err){
+        if (err.response && err.response.data) {
+            return {
+                success: false,
+                message: err.response.data.message || "Error fetching members"
+            };
+        }
+
+        return {
+            success: false,
+            message: "An unexpected error occurred"
+        };
+    }
+
+}
+
+export const addMemberViaEmail = async (email, role) => {
+
+    try{
+        const res = await axiosInstance.post("api/club/add-member-via-email?email="+email+"&role="+role);
+        if(res.status == 200){
+            return {
+                success: true,
+                data: res.data
+            }
+        }
+        
+        return {
+            success: false,
+            message: "Failed to add member"
+        }
+    }catch(err){
+        if (err.response && err.response.data) {
+            return {
+                success: false,
+                message: err.response.data.message || "Error adding members"
+            };
+        }
+
+        return {
+            success: false,
+            message: "An unexpected error occurred"
+        };
+    }
+
+}
+
+export const updateMemberRole = async (memberId, role) => {
+
+    try{
+        const res = await axiosInstance.get("api/club/change-member-role?memberId="+memberId+"&role="+role);
+        if(res.status == 200){
+            return {
+                success: true,
+                data: res.data
+            }
+        }
+        
+        return {
+            success: false,
+            message: "Failed to add member"
+        }
+    }catch(err){
+        if (err.response && err.response.data) {
+            return {
+                success: false,
+                message: err.response.data.message || "Error adding members"
+            };
+        }
+
+        return {
+            success: false,
+            message: "An unexpected error occurred"
+        };
+    }
+
+}
+
+export const getClubMembers = async (status) => {
+
+    try{
+
+        const res = await axiosInstance.get("api/club/club-members?status="+status);
+        if(res.status == 200){
+            return {
+                success: true,
+                data: res.data
+            }
+        }
+        
+        return {
+            success: false,
+            message: "Failed to get members"
+        }
+    }catch(err){
+        if (err.response && err.response.data) {
+            return {
+                success: false,
+                message: err.response.data.message || "Error fetching members"
+            };
+        }
+
+        return {
+            success: false,
+            message: "An unexpected error occurred"
+        };
+    }
+
+}

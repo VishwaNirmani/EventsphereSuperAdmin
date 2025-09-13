@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getStoredToken, storeToken  } from "./TokenService";
+import { getStoredToken, storeToken } from "./TokenService";
 
 const baseUrl = process.env.REACT_APP_BASE_API_URL;
 
@@ -16,6 +16,11 @@ axiosInstance.interceptors.request.use((req) => {
         req.headers.Authorization = `Bearer ${tokens.accessToken}`;
     }
 
+    const clubToken = localStorage.getItem("clubToken");
+    if (clubToken) {
+        req.headers.set("club-token", clubToken);
+    }
+
     return req;
 }, (err) => Promise.reject(err));
 
@@ -24,10 +29,10 @@ axiosInstance.interceptors.response.use((resp) => resp, async (error) => {
     const originalRequestConfig = error.config;
 
     if (error.request.status === 401 && !originalRequestConfig._retry) {
-        
+
         originalRequestConfig._retry = true;
         const tokens = getStoredToken();
-        
+
         if (tokens) {
             try {
                 const response = await axios.post(baseUrl + "/api/auth/refresh-token", {

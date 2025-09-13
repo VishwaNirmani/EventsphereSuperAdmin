@@ -24,8 +24,8 @@ function App() {
               <Route path="/" element={<DashboardLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path="clubs" element={<Clubs />} />
-                <Route path="events" element={<Events />} />
-                <Route path="members" element={<Members />} />
+                <Route path="clubs/:clubId/events" element={<Events />} />
+                <Route path="clubs/:clubId/members" element={<Members />} />
               </Route>
             </Route>
           </Routes>

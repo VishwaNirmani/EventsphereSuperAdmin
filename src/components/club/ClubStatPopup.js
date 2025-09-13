@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getClubStat } from "../../services/ClubService";
 import LoadingComponent from "../other/LoadingComponent";
+import { getClubToken } from "../../services/AuthService";
 
 const ClubStatsPopup = ({ clubName, onClose, clubId }) => {
     const navigate = useNavigate();
@@ -20,13 +21,22 @@ const ClubStatsPopup = ({ clubName, onClose, clubId }) => {
     }, []);
 
     const handleNavigateEvents = () => {
-        navigate(`/clubs/${clubId}/events`);
-        onClose();
+        getClubToken(clubId).then(res => {
+            if (res.success) {
+                navigate(`/clubs/${clubId}/events?name=${clubName}`);
+                onClose();
+            }
+        })
+
     };
 
     const handleNavigateMembers = () => {
-        navigate(`/clubs/${clubId}/members`);
-        onClose();
+        getClubToken(clubId).then(res => {
+            if (res.success) {
+                navigate(`/clubs/${clubId}/members?name=${clubName}`);
+                onClose();
+            }
+        })
     };
 
     return (

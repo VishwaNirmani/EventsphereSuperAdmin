@@ -1,5 +1,5 @@
 import axiosInstance from "../utils/RequestHelper"
-import { storeToken } from "../utils/TokenService";
+import { storeClubToken, storeToken } from "../utils/TokenService";
 
 export const login = async (username, password) => {
 
@@ -167,5 +167,38 @@ export const getGoogleOAuthUrl = async () => {
             data: "An unexpected error occurred"
         };
 
+    }
+}
+
+export const getClubToken = async (clubId) => {
+
+    try {
+        const response = await axiosInstance.get("/api/auth/authorize-club?clubId="+clubId);
+
+        if (response.status === 200 && response.data) {
+            storeClubToken(response.data);
+            return {
+                success: true,
+                message: "Successfully authenticated"
+            };
+        }
+
+        return {
+            success: false,
+            message: "Invalid response from server"
+        };
+    } catch (error) {
+
+        if (error.response && error.response.data) {
+            return {
+                success: false,
+                message: error.response.data.message || "Authentication failed"
+            };
+        }
+
+        return {
+            success: false,
+            message: "An unexpected error occurred"
+        };
     }
 }
