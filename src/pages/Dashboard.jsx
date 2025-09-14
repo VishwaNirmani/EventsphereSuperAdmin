@@ -1,9 +1,5 @@
-import React from 'react';
-import CountUp from 'react-countup';
-import ClubListTable from '../tables/ClubListTable';
-import OverviewStat from '../cards/OverviewStat';
-import Header from '../components/Header';
-import EventTable from '../tables/EventTable';
+import React, { useEffect, useState } from "react";
+import CountUp from "react-countup";
 import {
   BarChart,
   Bar,
@@ -11,120 +7,141 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts';
+} from "recharts";
+import {
+  FaUsers,
+  FaCalendarAlt,
+  FaUniversity,
+  FaClipboardList,
+} from "react-icons/fa";
+import { getOverview } from "../services/OverviewService";
 
 const Dashboard = () => {
-  const eventData = [
-    { month: "Jan", events: 22 },
-    { month: "Feb", events: 18 },
-    { month: "Mar", events: 30 },
-    { month: "Apr", events: 25 },
-    { month: "May", events: 35 },
-    { month: "Jun", events: 28 },
-  ];
 
-  const recentUpdates = [
-    { message: "New event 'CodeFest' approved", time: "2 hours ago" },
-    { message: "User JohnDoe requested club registration", time: "5 hours ago" },
-    { message: "Monthly report generated", time: "Yesterday" },
-  ];
+  const [eventData, setEventData] = useState([
+    { month: "Jan", events: 0 },
+    { month: "Feb", events: 0 },
+    { month: "Mar", events: 0 },
+    { month: "Apr", events: 0 },
+    { month: "May", events: 0 },
+    { month: "Jun", events: 0 }
+  ]);
 
-  const recentUsers = [
-    { name: "Alice Silva", role: "Member", joined: "2025-07-25" },
-    { name: "Daniel Perera", role: "Club Admin", joined: "2025-07-24" },
-    { name: "Ravi Senanayake", role: "Member", joined: "2025-07-23" },
-  ];
+  const [clubData, setClubData] = useState([
+    { month: "Jan", clubs: 0 },
+    { month: "Feb", clubs: 0 },
+    { month: "Mar", clubs: 0 },
+    { month: "Apr", clubs: 0 },
+    { month: "May", clubs: 0 },
+    { month: "Jun", clubs: 0 }
+  ]);
 
-  const pendingClubs = [
-    { name: "AI Explorers", owner: "Ishan", status: "Pending" },
-    { name: "Green Warriors", owner: "Nadeesha", status: "Pending" },
-  ];
+  const [stat, setStat] = useState({
+    totalEvents: 0,
+    totalUsers: 0,
+    totalActiveClubs: 0,
+    pendingClubRequests: 0
+  });
+
+  useEffect(() => {
+    getOverview().then(res => {
+      if(res.success){
+        setStat(res.data.adminStat);
+        setEventData(res.data.monthlyEvents);
+        setClubData(res.data.monthlyClubs);
+      }
+    });
+  }, []);
 
   return (
     <div className="flex-1 bg-gray-50 min-h-screen px-8 py-6">
-      
-      <h2 className="text-2xl font-bold mb-4">Overview</h2>
-
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pb-6">
-        <OverviewStat title="Total Events" value={126} />
-        <OverviewStat title="Total Members" value={512} />
-        <OverviewStat title="Total Clubs" value={48} />
-        <OverviewStat title="Total Requests" value={12} />
+      {/* Welcome Title */}
+      <div className="mb-10 text-center">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800">
+          👋 Welcome Back, <span className="text-indigo-600">Super Admin</span>
+        </h1>
+        <p className="text-gray-500 mt-2 text-sm md:text-base">
+          Here’s an overview of your platform performance at a glance
+        </p>
       </div>
 
-      {/* Charts */}
+      {/* Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div className="bg-white rounded-xl shadow-md p-5 flex items-center space-x-4 hover:shadow-lg transition">
+          <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
+            <FaCalendarAlt size={24} />
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Total Events</p>
+            <h3 className="text-xl font-bold text-gray-800">
+              <CountUp end={stat.totalEvents} duration={2} />
+            </h3>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-md p-5 flex items-center space-x-4 hover:shadow-lg transition">
+          <div className="p-3 bg-green-100 text-green-600 rounded-full">
+            <FaUsers size={24} />
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Total Members</p>
+            <h3 className="text-xl font-bold text-gray-800">
+              <CountUp end={stat.totalUsers} duration={2} />
+            </h3>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-md p-5 flex items-center space-x-4 hover:shadow-lg transition">
+          <div className="p-3 bg-purple-100 text-purple-600 rounded-full">
+            <FaUniversity size={24} />
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Total Clubs</p>
+            <h3 className="text-xl font-bold text-gray-800">
+              <CountUp end={stat.totalActiveClubs} duration={2} />
+            </h3>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-md p-5 flex items-center space-x-4 hover:shadow-lg transition">
+          <div className="p-3 bg-yellow-100 text-yellow-600 rounded-full">
+            <FaClipboardList size={24} />
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Pending Requests</p>
+            <h3 className="text-xl font-bold text-gray-800">
+              <CountUp end={stat.pendingClubRequests} duration={2} />
+            </h3>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white shadow-md rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Events in Last 6 Months</h3>
+        <div className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">
+            Events in Last Months
+          </h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={eventData}>
               <XAxis dataKey="month" stroke="#888" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="events" fill="#5A67BA" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="events" fill="#4F46E5" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Recent Updates */}
-        <div className="bg-white shadow-md rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Recent Updates</h3>
-          <ul className="space-y-3">
-            {recentUpdates.map((update, idx) => (
-              <li key={idx} className="flex flex-col border-b pb-2">
-                <span className="text-gray-800 font-medium">{update.message}</span>
-                <span className="text-sm text-gray-500">{update.time}</span>
-              </li>
-            ))}
-          </ul>
+        <div className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">
+            Clubs in Last Months
+          </h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={clubData}>
+              <XAxis dataKey="month" stroke="#888" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="events" fill="#10B981" radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
-      </div>
-
-      {/* User Management Shortcut */}
-      <div className="bg-white mt-6 shadow-md rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">Recent Users</h3>
-        <table className="min-w-full text-sm">
-          <thead>
-            <tr className="text-left text-gray-500 border-b">
-              <th className="py-2">Name</th>
-              <th className="py-2">Role</th>
-              <th className="py-2">Joined</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentUsers.map((user, index) => (
-              <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="py-2">{user.name}</td>
-                <td className="py-2">{user.role}</td>
-                <td className="py-2">{user.joined}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Club Management Section */}
-      <div className="bg-white mt-6 shadow-md rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">Pending Club Requests</h3>
-        <table className="min-w-full text-sm">
-          <thead>
-            <tr className="text-left text-gray-500 border-b">
-              <th className="py-2">Club Name</th>
-              <th className="py-2">Owner</th>
-              <th className="py-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pendingClubs.map((club, index) => (
-              <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="py-2">{club.name}</td>
-                <td className="py-2">{club.owner}</td>
-                <td className="py-2">{club.status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </div>
   );
