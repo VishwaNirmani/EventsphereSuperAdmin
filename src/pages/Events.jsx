@@ -303,7 +303,7 @@ const Event = () => {
               </div>
 
               {/* Purchase Statistics */}
-              {stats ? (
+              {eventStat ? (
                 <div>
                   <h4 className="text-lg font-semibold text-gray-800 mb-3">
                     Ticket Statistics

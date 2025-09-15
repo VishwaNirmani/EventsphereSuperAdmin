@@ -138,7 +138,7 @@ const Dashboard = () => {
               <XAxis dataKey="month" stroke="#888" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="events" fill="#10B981" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="clubs" fill="#10B981" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
